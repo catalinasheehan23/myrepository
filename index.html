@@ -227,7 +227,6 @@
 
     const quoteText = document.getElementById("quoteText");
     const quoteTag = document.getElementById("quoteTag");
-    const counterPill = document.getElementById("counterPill");
     const btn = document.getElementById("newQuoteBtn");
 
     let lastIndex = -1;
@@ -255,7 +254,6 @@
 
       lastIndex = index;
       shownCount = Math.min(shownCount + 1, quotes.length);
-      counterPill.textContent = shownCount + " / " + quotes.length;
     }
 
     // First quote on load
