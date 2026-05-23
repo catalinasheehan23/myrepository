@@ -1,0 +1,280 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Cozy Quote Generator</title>
+  <style>
+    :root{
+      /* Soft earthy palette */
+      --bg: #fbf7f1;         /* warm cream */
+      --card: #fffaf3;       /* lighter cream */
+      --ink: #2f2a24;        /* warm dark */
+      --muted: #6b5f54;      /* taupe */
+      --accent: #c7875f;     /* clay */
+      --accent2: #9bb28f;    /* sage */
+      --stroke: rgba(47,42,36,.12);
+      --shadow: 0 12px 28px rgba(47,42,36,.10);
+      --radius: 20px;
+    }
+
+    *{ box-sizing: border-box; }
+    body{
+      margin:0;
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji","Segoe UI Emoji";
+      background: radial-gradient(1200px 600px at 10% 10%, rgba(155,178,143,.18), transparent 55%),
+                  radial-gradient(1000px 500px at 90% 0%, rgba(199,135,95,.18), transparent 50%),
+                  var(--bg);
+      color: var(--ink);
+      padding: 18px;
+    }
+
+    /* Notion-friendly embed sizing:
+       - keep a predictable height
+       - let it scale to the iframe width */
+    .widget{
+      width: min(680px, 100%);
+      margin: 0 auto;
+      border: 1px solid var(--stroke);
+      background: linear-gradient(180deg, rgba(255,250,243,1), rgba(251,247,241,1));
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+
+    .header{
+      padding: 16px 18px 10px;
+      display:flex;
+      align-items:center;
+      justify-content: space-between;
+      gap: 12px;
+      border-bottom: 1px solid var(--stroke);
+      background: rgba(255,255,255,.45);
+      backdrop-filter: blur(6px);
+    }
+
+    .title{
+      display:flex;
+      align-items: baseline;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .badge{
+      font-size: 12px;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      color: var(--muted);
+      background: rgba(155,178,143,.18);
+      border: 1px solid rgba(155,178,143,.25);
+      padding: 6px 10px;
+      border-radius: 999px;
+      white-space: nowrap;
+    }
+
+    h1{
+      margin:0;
+      font-size: 16px;
+      font-weight: 650;
+    }
+
+    .body{
+      padding: 18px;
+    }
+
+    .quote-card{
+      border: 1px solid var(--stroke);
+      background: rgba(255,255,255,.55);
+      border-radius: calc(var(--radius) - 6px);
+      padding: 18px 16px;
+      position: relative;
+      min-height: 132px;
+      display:flex;
+      flex-direction: column;
+      justify-content: center;
+      gap: 10px;
+    }
+
+    .quote-mark{
+      position:absolute;
+      top: 10px;
+      right: 12px;
+      font-size: 34px;
+      color: rgba(199,135,95,.22);
+      user-select: none;
+      line-height: 1;
+    }
+
+    .quote{
+      margin: 0;
+      font-size: 18px;
+      line-height: 1.4;
+    }
+
+    .sub{
+      margin: 0;
+      font-size: 13px;
+      color: var(--muted);
+    }
+
+    .controls{
+      margin-top: 14px;
+      display:flex;
+      gap: 10px;
+      align-items:center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+    }
+
+    button{
+      appearance: none;
+      border: 1px solid rgba(199,135,95,.35);
+      background: linear-gradient(180deg, rgba(199,135,95,.95), rgba(199,135,95,.80));
+      color: #fff;
+      padding: 11px 14px;
+      border-radius: 999px;
+      font-size: 14px;
+      font-weight: 650;
+      cursor: pointer;
+      box-shadow: 0 10px 18px rgba(199,135,95,.18);
+      transition: transform .08s ease, filter .18s ease;
+      min-width: 132px;
+    }
+    button:hover{ filter: brightness(1.03); }
+    button:active{ transform: translateY(1px) scale(.99); }
+    button:focus-visible{
+      outline: 3px solid rgba(155,178,143,.45);
+      outline-offset: 3px;
+    }
+
+    .pill{
+      font-size: 12px;
+      color: var(--muted);
+      border: 1px dashed rgba(47,42,36,.20);
+      background: rgba(255,255,255,.35);
+      padding: 8px 10px;
+      border-radius: 999px;
+    }
+
+    /* Mobile tweaks */
+    @media (max-width: 420px){
+      body{ padding: 12px; }
+      .body{ padding: 14px; }
+      .quote{ font-size: 17px; }
+      .controls{ gap: 8px; }
+      button{ width: 100%; }
+      .pill{ width: 100%; text-align: center; }
+    }
+
+    /* Smooth fade between quotes */
+    .fade{
+      animation: fadeIn .22s ease-out;
+    }
+    @keyframes fadeIn{
+      from{ opacity: .2; transform: translateY(2px); }
+      to{ opacity: 1; transform: translateY(0); }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="widget" role="application" aria-label="Quote generator widget">
+    <div class="header">
+      <div class="title">
+        <h1>Cozy Quote Generator</h1>
+        <span class="badge">soft + earthy</span>
+      </div>
+      <span class="badge" style="background: rgba(199,135,95,.14); border-color: rgba(199,135,95,.22);">
+        tap for a new vibe
+      </span>
+    </div>
+
+    <div class="body">
+      <div class="quote-card" aria-live="polite" aria-atomic="true">
+        <div class="quote-mark">“</div>
+        <p class="quote" id="quoteText"></p>
+        <p class="sub" id="quoteTag"></p>
+      </div>
+
+      <div class="controls">
+        <button id="newQuoteBtn" type="button">new quote</button>
+        <div class="pill" id="counterPill">1 / 20</div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // 20 original quotes: motivation, productivity, self-care, romanticizing life
+    const quotes = [
+      { text: "Start tiny, start softly, but start—your future self is already proud.", tag: "Motivation" },
+      { text: "Treat your attention like a candle: shield it from drafts and it will light the whole room.", tag: "Productivity" },
+      { text: "Consistency isn’t loud. It’s the quiet promise you keep when no one is watching.", tag: "Motivation" },
+      { text: "Do the next kind thing for your goals: one clear task, one gentle breath.", tag: "Productivity" },
+      { text: "Rest is not a reward; it’s part of the recipe.", tag: "Self-care" },
+      { text: "Romanticize the ordinary: wash the mug, open the window, cue the playlist—this is your life.", tag: "Romanticizing life" },
+      { text: "You don’t need more time—you need a softer yes to what matters.", tag: "Productivity" },
+      { text: "Progress counts even when it’s messy, even when it’s slow, even when it’s just one step.", tag: "Motivation" },
+      { text: "Your nervous system deserves a plan that includes peace.", tag: "Self-care" },
+      { text: "Make today a little altar: light, water, music, and one brave decision.", tag: "Romanticizing life" },
+      { text: "If it’s worth doing, it’s worth doing imperfectly and on purpose.", tag: "Motivation" },
+      { text: "Set a timer, clear a corner, and let the small sprint carry you.", tag: "Productivity" },
+      { text: "Speak to yourself like someone you’re responsible for protecting.", tag: "Self-care" },
+      { text: "Let your routines be love letters to the person you’re becoming.", tag: "Motivation" },
+      { text: "Your pace is valid. Your pauses are intelligent.", tag: "Self-care" },
+      { text: "Focus is a boundary: choose one thing, and let the rest wait kindly.", tag: "Productivity" },
+      { text: "Make it aesthetic if it helps—beautiful tools can be honest support.", tag: "Romanticizing life" },
+      { text: "The goal isn’t a perfect day; it’s a day that includes you.", tag: "Self-care" },
+      { text: "Write the plan in pencil, then show up in ink.", tag: "Productivity" },
+      { text: "You are allowed to be a masterpiece and a work-in-progress at the same time.", tag: "Motivation" }
+    ];
+
+    const quoteText = document.getElementById("quoteText");
+    const quoteTag = document.getElementById("quoteTag");
+    const counterPill = document.getElementById("counterPill");
+    const btn = document.getElementById("newQuoteBtn");
+
+    let lastIndex = -1;
+    let shownCount = 0;
+
+    function randomIndexAvoidRepeat(max, avoid) {
+      if (max <= 1) return 0;
+      let i = Math.floor(Math.random() * max);
+      while (i === avoid) i = Math.floor(Math.random() * max);
+      return i;
+    }
+
+    function setQuote(index) {
+      const q = quotes[index];
+
+      // tiny animation
+      quoteText.classList.remove("fade");
+      quoteTag.classList.remove("fade");
+      void quoteText.offsetWidth; // reflow to restart animation
+      quoteText.classList.add("fade");
+      quoteTag.classList.add("fade");
+
+      quoteText.textContent = q.text;
+      quoteTag.textContent = "— " + q.tag;
+
+      lastIndex = index;
+      shownCount = Math.min(shownCount + 1, quotes.length);
+      counterPill.textContent = shownCount + " / " + quotes.length;
+    }
+
+    // First quote on load
+    setQuote(Math.floor(Math.random() * quotes.length));
+
+    btn.addEventListener("click", () => {
+      const i = randomIndexAvoidRepeat(quotes.length, lastIndex);
+      setQuote(i);
+    });
+  </script>
+
+  <!--
+    Notion embedding notes:
+    - Put this file on a simple static host (GitHub Pages, Netlify, Vercel, etc.)
+    - In Notion, type /embed and paste the hosted URL
+    - The widget is responsive and will fit the embed width on mobile
+  -->
+</body>
+</html>
